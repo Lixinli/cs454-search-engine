@@ -109,7 +109,7 @@ public class Search {
 	}
 
 	public ArrayList<String> search(String text) {
-
+		
 		String[] str = text.split(" ");
 		System.out.println("exist");
 
@@ -141,6 +141,7 @@ public class Search {
 		}
 		System.out.println("search result========" + searchDoc.size());
 		for (Document tmpdoc : searchDoc) {
+	
 			if(tmpdoc.proximity!=0)
 			tmpdoc.proximity = tmpdoc.proximity / maxProx;
 		
@@ -162,14 +163,15 @@ public class Search {
 		// System.out.print("result # " + searchDoc.size());
 		ArrayList<String> result = new ArrayList<String>();
 		for (Document tmpdoc : searchDoc) {
-			 System.out.println("url: " + tmpdoc.url + "  tfidf= "
-			 + tmpdoc.TFIDF + "link score =" + tmpdoc.linkscore
-			 + "final score: " + tmpdoc.get_finalScore()+" prox "+tmpdoc.proximity);
+//			 System.out.println("url: " + tmpdoc.url + "  tfidf= "
+//			 + tmpdoc.TFIDF + "link score =" + tmpdoc.linkscore
+//			 + "final score: " + tmpdoc.get_finalScore()+" prox "+tmpdoc.proximity);
 			result.add(tmpdoc.realURL + "," + tmpdoc.TFIDF + "," + tmpdoc.linkscore
 					+ "," + tmpdoc.get_finalScore()+','+tmpdoc.proximity);
 		}
 		searchterms = new HashMap<String, Term>();
 		searchDoc = new ArrayList<Document>();
+		
 		return result;
 	}
 
@@ -197,7 +199,7 @@ public class Search {
 	public static void main(String[] args) throws Exception {
 		Search s = new Search();
 		s.readFile();
-		s.search("explosive");
+		s.search("java");
 		// while (true) {
 		// System.out.print("enter search term");
 		// Scanner scanner = new Scanner(System.in);
