@@ -1,8 +1,9 @@
 package asd;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Document {
@@ -19,6 +20,7 @@ public class Document {
 	public Set<Integer> position;
 	public ArrayList<Term> listofterms;
 	public String storage;
+	HashMap<String, Double> listofTFIDF;
 	double TFIDF;
 	double proximity;
 
@@ -51,74 +53,87 @@ public class Document {
 		this.listofterms = new ArrayList<Term>();
 	}
 
-	public Document(String url, double linkscore, double t,String realURL) {
+	public Document(String url, double linkscore, double t, String realURL) {
 		super();
 		this.id = 0;
 		this.url = url;
 		this.linkscore = linkscore;
 		this.listofterms = new ArrayList<Term>();
+		this.listofTFIDF = new HashMap<String, Double>();
 		this.TFIDF = t;
-		this.realURL=realURL;
+		this.realURL = realURL;
 	}
 
 	public void calculate_distance(ArrayList<String> query_terms) {
 		ArrayList<Long> pevterm = null;
 		double total = 0;
-		boolean firstTerm = false;
+		boolean notfirstTerm = false;
 		for (String term : query_terms) {
-			
+			// ===get tfidf from terms
+			if (listofTFIDF.containsKey(term))
+				if (TFIDF < listofTFIDF.get(term))
+					TFIDF = listofTFIDF.get(term);
+
 			for (Term t : listofterms) {
-				if (t.name.equals(term) && firstTerm) {
-					
+				if (t.name.equals(term) && notfirstTerm) {
+
 					// System.out.println(t.docs_pos.get(this.url) + "  "
 					// + query_terms.size());
+					//
 					total = total
 							+ cal_eachTerm(t.docs_pos.get(this.url), pevterm);
-					 
+
 				}
-				firstTerm = true;
+				notfirstTerm = true;
 				pevterm = t.docs_pos.get(this.url);
 			}
 		}
-		
+
 		proximity = total;
-	
 	}
 
-	public double cal_eachTerm(ArrayList<Long> arrayList,
-			ArrayList<Long> term2) {
+	public double cal_eachTerm(ArrayList<Long> arrayList, ArrayList<Long> term2) {
 		double scoreSum = 0;
 		
 		for (int i = 0; i < arrayList.size(); i++) {
-			long t1=arrayList.get(i);
+			long t1 = arrayList.get(i);
 			for (int j = 0; j < term2.size(); j++) {
-				long t2=term2.get(j);
-				if (Math.abs(t1 - t2) < 3&&t1!=t2)
-					scoreSum = Math.sqrt(Math.abs(Math.pow(t1, 2)
-							- Math.pow(t1, 2))
-							/ (Math.pow(t1 - t2, 4)))
+				long t2 = term2.get(j);
+				if (Math.abs(t1 - t2) < 3 && t1 != t2) {
+
+					scoreSum = 1 / Math.abs(Math.pow(t1, 2) - Math.pow(t2, 2))
 							+ scoreSum;
+//					System.out.println("yeah " + scoreSum);
+					
+				}
 			}
 		}
-		
+
 		return scoreSum;
 
 	}
 
-	public void addTerms(Term string) {
-		listofterms.add(string);
+	public void addTerms(Term term) {
+		listofterms.add(term);
 	}
 
-	/*
-	 * public void addTFIDF(double t) { this.TFIDF = t; }
-	 */
+	// public void addTFIDF(String name, double t) {
+	// this.listofTFIDF.put(name, t);
+	// }
 
 	public double get_finalScore() {
-		//System.out.println("tfidf: "+TFIDF);
-		//System.out.println("linkscore: "+TFIDF * .3 + linkscore * .3 +proximity*.4);
-		return TFIDF * .5 + linkscore * .5 ;
+		// System.out.println("tfidf: "+TFIDF);
+		// System.out.println("linkscore: "+TFIDF * .3 + linkscore * .3
+		// +proximity*.4);
+		return TFIDF * .3 + linkscore * .3;
 	}
 
-	
+	public void getTFIDF() {
+		for (Term tmpterm : listofterms) {
+			if (TFIDF < tmpterm.tfidf)
+				TFIDF = tmpterm.tfidf;
+		}
+
+	}
 
 }
