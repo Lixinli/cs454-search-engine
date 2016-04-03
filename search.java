@@ -9,7 +9,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 
 import org.json.simple.JSONArray;
@@ -25,9 +24,10 @@ public class Search {
 	public static ArrayList<Document> searchDoc = new ArrayList<Document>();
 	public static ArrayList<String> query_terms = new ArrayList<String>();
 	public static HashMap<Integer, Double> PRvalue = new HashMap<Integer, Double>();
-	Map<String, Double> tfidfList = new HashMap<String, Double>();
+	
 
 	public void readFile() throws IOException, ParseException {
+		
 		read_Index_File();
 		read_Rank_File();
 		System.out.println(doc.size());
@@ -66,21 +66,18 @@ public class Search {
 				if (!related_url.contains(path))
 					related_url.add(path);
 
-				if (tfidfList.containsKey(path)) { // add tfidf to list
-					if (tfidfList.get(path) < tfidf)
-						tfidfList.put(path, tfidf);
-				} else {
-					tfidfList.put(path, tfidf);
-				}
+				//if (doc.containsKey(path))  // add tfidf to list
+					//doc.get(path).addTFIDF(name,tfidf);
+					
 			}
 			double finalTFIDF = tfidf / maxtfidf;
 			totalterms.put(name, new Term(name, docs_pos, finalTFIDF,
 					related_url));
 		}
-		for (Map.Entry<String, Double> entry : tfidfList.entrySet()) {
-			entry.setValue(entry.getValue() / maxtfidf);
-
-		}
+//		for (Map.Entry<String, Double> entry : tfidfList.entrySet()) {
+//			entry.setValue(entry.getValue() / maxtfidf);
+//
+//		}
 	}
 
 	public void read_Rank_File() throws IOException, ParseException {
@@ -91,7 +88,7 @@ public class Search {
 		JSONArray ja = (JSONArray) json.get("rank");
 		// Set<String> linklist = new HashSet<String>();
 		for (int j = 0; j < ja.size(); j++) {
-			double tfidf = 0;
+			
 			JSONObject json2 = (JSONObject) ja.get(j);
 			String url = (String) json2.get("path");
 			String path;
@@ -99,11 +96,11 @@ public class Search {
 				path = url;
 			else
 				path = url + ".html";
-			if (tfidfList.containsKey(path))
-				tfidf = tfidfList.get(path);
+//			if (tfidfList.containsKey(path))
+//				tfidf = tfidfList.get(path);
 			// System.out.println(path);
 			doc.put(path, new Document(path, (Double) json2.get("linkscore"),
-					tfidf,(String) json2.get("realURL")));
+					0,(String) json2.get("realURL")));
 		}
 
 	}
@@ -122,6 +119,13 @@ public class Search {
 			}
 		}
 		addTerm();
+		//=eliminate repeat
+	//	ArrayList<Document> al = new ArrayList<>();
+		// add elements to al, including duplicates
+		Set<Document> hs = new HashSet<Document>();
+		hs.addAll(searchDoc);
+		searchDoc.clear();
+		searchDoc.addAll(hs);
 		/*
 		 * for (Map.Entry<String, Document> entry : doc.entrySet()) {
 		 * 
@@ -134,17 +138,19 @@ public class Search {
 		double maxProx = 0;
 		for (Document tmpdoc : searchDoc) {
 			tmpdoc.calculate_distance(query_terms);
+		//	
 			if (tmpdoc.proximity > maxProx)
 				maxProx = tmpdoc.proximity;
 			// System.out.println(tmpdoc.get_finalScore());
 			//System.out.println("prox score "+tmpdoc.realURL+" = "+tmpdoc.proximity);
 		}
 		System.out.println("search result========" + searchDoc.size());
-		for (Document tmpdoc : searchDoc) {
-	
-			if(tmpdoc.proximity!=0)
-			tmpdoc.proximity = tmpdoc.proximity / maxProx;
 		
+		for (Document tmpdoc : searchDoc) {
+			
+			if(tmpdoc.proximity!=0&&tmpdoc.proximity<=maxProx)
+			tmpdoc.proximity = tmpdoc.proximity / maxProx;
+			
 		}
 
 		// System.out.println(searchDoc);
@@ -162,12 +168,19 @@ public class Search {
 		
 		// System.out.print("result # " + searchDoc.size());
 		ArrayList<String> result = new ArrayList<String>();
+		int counter=0;
 		for (Document tmpdoc : searchDoc) {
 //			 System.out.println("url: " + tmpdoc.url + "  tfidf= "
 //			 + tmpdoc.TFIDF + "link score =" + tmpdoc.linkscore
 //			 + "final score: " + tmpdoc.get_finalScore()+" prox "+tmpdoc.proximity);
+			tmpdoc.getTFIDF();
+			if(tmpdoc.proximity>0)
+			System.out.println("url "+tmpdoc.realURL+" pro " +tmpdoc.proximity);
+			if(counter<5)
 			result.add(tmpdoc.realURL + "," + tmpdoc.TFIDF + "," + tmpdoc.linkscore
 					+ "," + tmpdoc.get_finalScore()+','+tmpdoc.proximity);
+			counter++;
+			
 		}
 		searchterms = new HashMap<String, Term>();
 		searchDoc = new ArrayList<Document>();
@@ -199,7 +212,7 @@ public class Search {
 	public static void main(String[] args) throws Exception {
 		Search s = new Search();
 		s.readFile();
-		s.search("java");
+		s.search("education institution");
 		// while (true) {
 		// System.out.print("enter search term");
 		// Scanner scanner = new Scanner(System.in);
