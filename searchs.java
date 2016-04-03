@@ -24,7 +24,7 @@ public class Searchs extends HttpServlet {
 	Search s;
 
 	public void init() throws ServletException {
-		 ServletContext context = this.getServletContext();
+		ServletContext context = this.getServletContext();
 		 s = new Search();
 		 try {
 		 s.readFile();
@@ -57,95 +57,109 @@ public class Searchs extends HttpServlet {
 
 		out.println("</head>");
 		out.println("<body >asdasd");
-		//out.println(" <script language=\"javascript\">");
+		out.println(" <script language=\"javascript\">");
+
+		out.println("");
+
+		out.println("$(document).ready(function() {");
+		out.println(" 	var $searchButton = $('#s');");
+		out.println("var $searchQuery = $('#searchBox').val();");
+
+		out.println("var appId = ':OoOHrxezkeLz5IadDuqHWyExHwuP+kgVmm6TcGVuc4o';");
+		out.println("	function getImage() {");
+
+		out.println(" var azureKey = btoa(appId);");
+		out.println(" var $searchQuery = $('#searchBox').val();");
+		out.println(" 	var myUrl = 'https://api.datamarket.azure.com/Bing/Search/v1/Composite?Sources=%27image%27&$top=50&$format=json&Query=%27'");
+		out.println(" 	+ $searchQuery + '%27';");
+		out.println(" $.ajax({ method : 'post',url : myUrl,");
+		out.println(" headers : {	'Authorization' : 'Basic ' + azureKey},");
+		out.println("success : function(data) {");
+		out.println("var randomIndex = Math.floor(Math.random() * 50);");
+		out.println(" var imgLink = '<img width=\"500px\" src=\"'");
+		out.println(" + data.d.results[0].Image[randomIndex].MediaUrl");
+		out.println(" + '\" />';");
+		out.println("$('#output').html(imgLink);},");
+		out.println(" failure : function(err) {console.error(err);}");
+		out.println(" });");
+		out.println(" };");
+
+		out.println(" $searchButton.click(function(e) {e.preventDefault();  getImage(); });});");
+		out.println(" </script>");
 		//
-		//out.println(" alert(\"trigger\");");
+		// out.println("	<div class=\"page-header\">");
+		// out.println("		<h1>Welcome <small></small>" + " !</h1>");
+		// out.println("	</div>");
+		out.println("	<form action=\"Search\" method=\"post\">");
 
-//		out.println("$(document).ready(function() {");
-//		out.println(" 	var $searchButton = $('#s');");
-//		out.println("var $searchQuery = $('#searchBox').val();");
-//		
-//		
-//		out.println("var appId = 'OoOHrxezkeLz5IadDuqHWyExHwuP+kgVmm6TcGVuc4o';");
-//		out.println("	function getImage() {");
-//		
-//		out.println(" var azureKey = btoa(appId);");
-//		out.println(" var $searchQuery = $('#searchBox').val();");
-//		out.println(" 	var myUrl = 'https://api.datamarket.azure.com/Bing/Search/v1/Composite?Sources=%27image%27&$top=50&$format=json&Query=%27'");
-//		out.println(" 	+ $searchQuery + '%27';");
-//		out.println(" };");
-//		out.println(" $searchButton.click(function(e) {e.preventDefault();alert($searchQuery);});});");
-//		out.println(" </script>");
-//
-//		 out.println("	<div class=\"page-header\">");
-//		 out.println("		<h1>Welcome <small></small>" + " !</h1>");
-//		 out.println("	</div>");
-		 out.println("	<form action=\"Search\" method=\"post\">");
-		
-		 out.println("		<input value=\""
-		 + "\" placeholder=\"Enter here\" type=\"text\" name=\"query\" />");
-		 out.println("		<br />");
-		
-		 out.println("		<br />");
-		 out.println("		<input type=\"submit\" value=\"Search\" class=\"btn btn-primary\"  color=\"blue\"/>");
-		 out.println("		<br />");
-		
-		 out.println("	</form>");
-		 out.println("</div>");
-		 out.println("<div class=\"container\">");
-		 out.println(" <table class=\"table table-striped table-hover table-bordered\">");
-		 out.println("<tr>");
-		 out.println("<td>");
-		 out.println("url");
-		 out.println("</td>");
-		 out.println("<td>");
-		 out.println("tfidf");
-		 out.println("</td>");
-		 out.println("<td>");
-		 out.println("link");
-		 out.println("</td>");
-		 out.println("<td>");
-		 out.println("final scrore");
-		 out.println("</td>");
-		 out.println("<td>");
-		 out.println("proximity");
-		 out.println("</td>");
-		 out.println("</tr>");
-		 System.out.println("result size:" + result.size());
-		 if (result.size() > 0)
-		 for (String doc : result) {
-		 String[] str = doc.split(",");
-		 System.out.println(str[0]);
-		 out.println("<tr>");
-		 out.println("<td>");
-		 
-		 out.println("<a href=\""+str[0]+"\">"+str[0]+"</a>");
-		 out.println("</td>");
-		
-		 out.println("<td>");
-		 out.println(str[1]);
-		 out.println("</td>");
-		
-		 out.println("<td>");
-		 out.println(str[2]);
-		 out.println("</td>");
-		 out.println("<td>");
-		 out.println(str[3]);
-		 out.println("</td>");
-		 out.println("<td>");
-		 out.println(str[4]);
-		 out.println("</td>");
-		 out.println("</tr>");
-		 }
+		out.println("		<input value=\""
+				+ "\" placeholder=\"Enter here\" type=\"text\" name=\"query\" id=\"searchBox\" />");
+		out.println("		<br />");
 
-		 out.println("</table>");
-		 out.println("</div>");
+		out.println("		<br />");
+		out.println("		<input type=\"submit\" value=\"Search\" class=\"btn btn-primary\"  color=\"blue\"/>");
+		out.println("		<br />");
+		out.println(" <button id=\"s\" type=\"submit\">reandom</button>");
+		out.println("	</form>");
+		out.println("</div>");
+		out.println("<div class=\"container\">");
+		out.println(" <table class=\"table table-striped table-hover table-bordered\">");
+		out.println("<tr>");
+		out.println("<td>");
+		out.println("url");
+		out.println("</td>");
+		out.println("<td>");
+		out.println("tfidf");
+		out.println("</td>");
+		out.println("<td>");
+		out.println("link");
+		out.println("</td>");
+		out.println("<td>");
+		out.println("final scrore");
+		out.println("</td>");
+		out.println("<td>");
+		out.println("proximity");
+		out.println("</td>");
+		out.println("</tr>");
+		System.out.println("result size:" + result.size());
+		if (result.size() > 0)
+			for (String doc : result) {
+				String[] str = doc.split(",");
+				System.out.println(str[0]);
+				out.println("<tr>");
+				out.println("<td>");
+
+				out.println("<a href=\"" + str[0] + "\">" + str[0] + "</a>");
+				out.println("</td>");
+
+				out.println("<td>");
+				out.println(str[1]);
+				out.println("</td>");
+
+				out.println("<td>");
+				out.println(str[2]);
+				out.println("</td>");
+				out.println("<td>");
+				out.println(str[3]);
+				out.println("</td>");
+				out.println("<td>");
+				out.println(str[4]);
+				out.println("</td>");
+				out.println("</tr>");
+			}
+
+		out.println("</table>");
+		out.println("</div>");
 		out.println("<div class=\"container\">");
 		out.println("<main>");
-		out.println(" <form>");
-		out.println("<input id=\"searchBox\" type=\"text\" type=\"submit\" name=\"searchBox\" required/>");
-		out.println(" <button id=\"s\" type=\"submit\">Get Image</button>");
-		out.println(" </form>");
+//		out.println(" <form>");
+//		out.println("<input id=\"searchBox\" type=\"text\" type=\"submit\" name=\"searchBox\" required/>");
+//		out.println(" <button id=\"s\" type=\"submit\">Get Image</button>");
+//		
+//		
+//	
+//
+//		out.println(" </form>");
 		out.println(" <div id=\"output\"></div>");
 		out.println("</main>");
 
@@ -161,8 +175,8 @@ public class Searchs extends HttpServlet {
 		String query = request.getParameter("query");
 		// System.out.println(query);
 		if (query != null && query != "") {
-			
-			ArrayList<String> result=s.search(query);
+
+			ArrayList<String> result = s.search(query);
 			// System.out.println(result.size());
 
 			request.setAttribute("result", result);
