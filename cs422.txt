@@ -26,10 +26,10 @@ cs422stu20@cs3.calstatela.edu
 		sc inner join courses cs on sc.course_id=cs.id and cs.title='Databases' where e.section_id=sc.id);
 
 -- 6. Find the name of the most popular course based on the number of the times the course was offered.
-	 select course_id, id, count(course_id) from sections
+	select title from courses where id= (select course_id from sections
     group by course_id
     order by count(course_id) desc
-    limit 1;
+    limit 1);
 	
 
 
