@@ -26,13 +26,19 @@ cs422stu20@cs3.calstatela.edu
 		sc inner join courses cs on sc.course_id=cs.id and cs.title='Databases' where e.section_id=sc.id);
 
 -- 6. Find the name of the most popular course based on the number of the times the course was offered.
-	 
-	select section_id, count(student_id) from enrollment
-    		group by section_id
-    			order by count(student_id);
+	 select course_id, id, count(course_id) from sections
+    group by course_id
+    order by count(course_id) desc
+    limit 1;
+	
 
 
 -- 7. Find the name of the most popular course based on the total number of students enrolled in the sections of the course.
+	select c.title from courses c inner join sections s on s.course_id=c.id where s.id = (select section_id from enrollment
+    group by section_id
+    order by count(student_id) desc
+    limit 1);
+
 
 -- 8. List the professors and the average grade points they gave. Order the results by average grade points in descending order.
 
