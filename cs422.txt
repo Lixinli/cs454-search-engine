@@ -51,10 +51,10 @@ cs422stu20@cs3.calstatela.edu
 	 
 -- 9. List the number of students graduated in 2009 by department. The results should show 0 for the departments that do not have any student graduated in 2009.
 		
-	 select d.name , count(s.major_id) from departments d left join 
+	 select d.name , count(s.major_id) as  'number of students graduated in 2009' from departments d left join 
 	 (select *  from students where extract( year from graduation_date ) = 2009) s on d.id=s.major_id group by d.name;
 	 
 		
 -- 10. List the students and their major GPA. The results do not need to include the students who have not taken any classes in their major.
-
 	
+	 select s.id , s.name,  sum(g.value)/count(g.id) as "GPA"from enrollment e inner join grades g on g.id=grade_id inner join students s on e.student_id= s.id group by e.student_id, s.id   order by sum(g.value) desc;
