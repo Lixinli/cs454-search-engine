@@ -46,10 +46,23 @@ cs422stu20@cs3.calstatela.edu
 
 
 -- 8. List the professors and the average grade points they gave. Order the results by average grade points in descending order.
-	 select f.id, (sum(g.value)/count(g.id)) as "average grade points", f.name from enrollment e inner join grades g on g.id=grade_id inner join sections sc on e.section_id=sc.id right join  faculty f on sc.instructor_id= f.id group by sc.instructor_id, f.name,f.id  order by sum(g.value) desc;
+	 select f.id,  sum(g.value)/count(g.id) as "average grade points", f.name from enrollment e inner join grades g on g.id=grade_id inner join sections sc on e.section_id=sc.id right join  faculty f on sc.instructor_id= f.id group by sc.instructor_id, f.name,f.id  order by sum(g.value) desc;
 	 
-
+	 
 -- 9. List the number of students graduated in 2009 by department. The results should show 0 for the departments that do not have any student graduated in 2009.
-
+		
+	 select  count(s.id) from students s left join departments d on major_id=d.id  
+ 	where extract( year from graduation_date ) = 2009  group by   d.name;
+ 	
+ 	
+ 	 select d.name, count(s.id) from students s right join departments d on major_id=d.id  
+ 	 where extract( year from graduation_date ) = 2009  group by d.name ;
+	 
+	 intersect 
+	 select d.name , count(s.major_id) from departments d left join 
+	 (select *  from students where extract( year from graduation_date ) = 2009) s on d.id=s.major_id group by d.name;
+	 
+		
 -- 10. List the students and their major GPA. The results do not need to include the students who have not taken any classes in their major.
 
+	
