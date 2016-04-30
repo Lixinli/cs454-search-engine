@@ -51,14 +51,6 @@ cs422stu20@cs3.calstatela.edu
 	 
 -- 9. List the number of students graduated in 2009 by department. The results should show 0 for the departments that do not have any student graduated in 2009.
 		
-	 select  count(s.id) from students s left join departments d on major_id=d.id  
- 	where extract( year from graduation_date ) = 2009  group by   d.name;
- 	
- 	
- 	 select d.name, count(s.id) from students s right join departments d on major_id=d.id  
- 	 where extract( year from graduation_date ) = 2009  group by d.name ;
-	 
-	 intersect 
 	 select d.name , count(s.major_id) from departments d left join 
 	 (select *  from students where extract( year from graduation_date ) = 2009) s on d.id=s.major_id group by d.name;
 	 
