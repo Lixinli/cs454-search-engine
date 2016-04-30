@@ -4,10 +4,10 @@ cs422stu20@cs3.calstatela.edu
       select c.title from departments d, courses c, sections s
        where d.name = 'Computer Science' and d.id = c.department_id and s.course_id=c.id and s.year=2009;
 -- 2. List the names of the Computer Science students who graduated in 2009. You must use INNER JOIN for this query.
-  select * from students s inner join departments d on 
-	s.major_id=d.id where d.name='Computer Science' and s.graduation_data;
+  	select s.name from students s inner join departments d on 
+	s.major_id=d.id where d.name='Computer Science' and extract(year from graduation_date) = 2009;
 
-		select * from students where extract(year from graduation_date) = 2009;
+	
 -- 3. List the names of the students who took the course Databases.
 
 	select name from students where name in
@@ -26,23 +26,20 @@ cs422stu20@cs3.calstatela.edu
 	 (select s.name from (students s inner join enrollment e on s.id= e.student_id),sections 
 		sc inner join courses cs on sc.course_id=cs.id and cs.title='Compilers' where e.section_id=sc.id)
 	intersect
+	
 	select name from students where name in
 	 (select s.name from (students s inner join enrollment e on s.id= e.student_id),sections 
 		sc inner join courses cs on sc.course_id=cs.id and cs.title='Databases' where e.section_id=sc.id);
 	
 -- 6. Find the name of the most popular course based on the number of the times the course was offered.
 	select title from courses where id= (select course_id from sections
-    group by course_id
-    order by count(course_id) desc
-    limit 1);
+    group by course_id    order by count(course_id) desc limit 1);
 	
 
 
 -- 7. Find the name of the most popular course based on the total number of students enrolled in the sections of the course.
 	select c.title from courses c inner join sections s on s.course_id=c.id where s.id = (select section_id from enrollment
-    group by section_id
-    order by count(student_id) desc
-    limit 1);
+    group by section_id order by count(student_id) desc limit 1);
 
 
 -- 8. List the professors and the average grade points they gave. Order the results by average grade points in descending order.
@@ -51,10 +48,12 @@ cs422stu20@cs3.calstatela.edu
 	 
 -- 9. List the number of students graduated in 2009 by department. The results should show 0 for the departments that do not have any student graduated in 2009.
 		
-	 select d.name , count(s.major_id) as  'number of students graduated in 2009' from departments d left join 
+	 select d.name , count(s.major_id) as  "number of students graduated in 2009" from departments d left join 
 	 (select *  from students where extract( year from graduation_date ) = 2009) s on d.id=s.major_id group by d.name;
 	 
 		
 -- 10. List the students and their major GPA. The results do not need to include the students who have not taken any classes in their major.
 	
-	 select s.id , s.name,  sum(g.value)/count(g.id) as "GPA"from enrollment e inner join grades g on g.id=grade_id inner join students s on e.student_id= s.id group by e.student_id, s.id   order by sum(g.value) desc;
+	 select s.id  , s.name, sum(g.value*c.units)/sum(c.units) as "GPA"from enrollment e inner join grades g on g.id=grade_id inner join
+	 sections sc on sc.id=e.section_id inner join
+	 courses c on c.id=sc.course_id inner join students s on e.student_id= s.id group by e.student_id, s.id   order by sum(g.value) desc;
