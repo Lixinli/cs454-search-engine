@@ -1,0 +1,6 @@
+The block to be pinned is already in the buffer pool
+The buffer is not pinned: increment pc
+The buffer is pinned: increment pc
+The block to be pinned is not in the buffer pool
+There is at least one unpinned buffer: find one unpinned and increment pc
+There is no unpinned buffer: out of memory error
