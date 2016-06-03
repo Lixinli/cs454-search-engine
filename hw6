@@ -54,10 +54,14 @@ Flush(Y)
 
 (a) Show an example of a schedule that is serializable but not serial. Explain why it is serializable but not serial.
     r1(x),w1(x),r2(y),w1(y),r2(x),r1(y),w2(x),w2(y) :  the schedule  is equivelnt to (T1) (T2) and it is Interleaved.  
-    and Precedence Graph shows that the 
+    and Precedence Graph shows that it follow T1 to T2 sequence
     
 (b) Show an example of a schedule that is serializable but not 2PL. Explain why it is serializable but not 2PL.
-
+ - sl1(x), r1(x), xl1(x), w1(x), sl2(y) r2(y), w1(y), ul1(x),r2(x), sl1(y), r1(y), xl2(x), w2(x), w2(y)
+ - it is serializable because i i took the answer from previous one and that the schedule is equivelnt to (T1) (T2).
+ but it is not 2pl because where T1 unlock (ul1(x) )and lock (sl1(y)) again in the next transaction, which vialtes 2pl  stated A transaction cannot request
+additional locks once it releases any locks.
+ 
 (c) Show an example of a schedule that is serializable but not recoverable. Explain why it is serializable but not recoverable.
 
 (d) Show an example of a schedule that is recoverable but not ACR. Explain why it is recoverable but not ACR.
