@@ -53,7 +53,9 @@ Flush(Y)
 4. (20pt) 
 
 (a) Show an example of a schedule that is serializable but not serial. Explain why it is serializable but not serial.
-
+    r1(x),w1(x),r2(y),w1(y),r2(x),r1(y),w2(x),w2(y) :  the schedule  is equivelnt to (T1) (T2) and it is Interleaved.  
+    and Precedence Graph shows that the 
+    
 (b) Show an example of a schedule that is serializable but not 2PL. Explain why it is serializable but not 2PL.
 
 (c) Show an example of a schedule that is serializable but not recoverable. Explain why it is serializable but not recoverable.
