@@ -14,20 +14,28 @@ Flush(log);
 Suppose a system crash may happen between any two operations in the sequence. Please answer the following questions:
 
 (a) Can the DBMS recover from a system crash using Undo-only Recovery? If not, rearrange the operations (Flush(log) operations can be added or removed if necessary) so it can be recovered using Undo-only Recovery.
+no, if the system crash between for example Flush(X) and <UPDATE, T, X, vx, vx'>. the system will not undo the changes.  
+
+
 Start Transaction
  <START, T>
 Write(X, vx')
 Write(Y, vy’)
 <UPDATE, T, X, vx, vx'>
 <UPDATE, T, Y, vy, vy'>
+Flush(log);
 Flush(Y)
 Flush(X);
 Commit;
 <COMMIT, T>
-Flush(log);
 
 
 
+
+
+
+(b) Can the DBMS recover from a system crash using Redo-only Recovery? If not, rearrange the operations (Flush(log) operations can be added or removed if necessary) so it can be recovered using Redo-only Recovery.
+no, 
 
 Start Transaction
  <START, T>
@@ -40,8 +48,6 @@ Flush(X);
 Write(Y, vy’)
 <UPDATE, T, Y, vy, vy'>
 Flush(log);
-(b) Can the DBMS recover from a system crash using Redo-only Recovery? If not, rearrange the operations (Flush(log) operations can be added or removed if necessary) so it can be recovered using Redo-only Recovery.
-
 4. (20pt) 
 
 (a) Show an example of a schedule that is serializable but not serial. Explain why it is serializable but not serial.
