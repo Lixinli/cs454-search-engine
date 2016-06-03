@@ -23,11 +23,12 @@ Write(X, vx')
 Write(Y, vy’)
 <UPDATE, T, X, vx, vx'>
 <UPDATE, T, Y, vy, vy'>
+Commit;
+<COMMIT, T>
+Flush(log);
 Flush(log);
 Flush(Y)
 Flush(X);
-Commit;
-<COMMIT, T>
 
 
 
