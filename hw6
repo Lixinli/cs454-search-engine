@@ -1,0 +1,59 @@
+3. (10pt)  For a transaction T, consider the following sequence of operations performed by a DBMS:
+
+Start Transaction
+<START, T>
+Write(X, vx')
+Flush(X);
+<UPDATE, T, X, vx, vx'>
+Write(Y, vy’)
+Flush(Y)
+<UPDATE, T, Y, vy, vy'>
+Commit;
+<COMMIT, T>
+Flush(log);
+Suppose a system crash may happen between any two operations in the sequence. Please answer the following questions:
+
+(a) Can the DBMS recover from a system crash using Undo-only Recovery? If not, rearrange the operations (Flush(log) operations can be added or removed if necessary) so it can be recovered using Undo-only Recovery.
+Start Transaction
+ <START, T>
+Write(X, vx')
+Write(Y, vy’)
+<UPDATE, T, X, vx, vx'>
+<UPDATE, T, Y, vy, vy'>
+Flush(Y)
+Flush(X);
+Commit;
+<COMMIT, T>
+Flush(log);
+
+
+
+
+Start Transaction
+ <START, T>
+
+Write(X, vx')
+<UPDATE, T, X, vx, vx'>
+Flush(log);
+Flush(X);
+
+Write(Y, vy’)
+<UPDATE, T, Y, vy, vy'>
+Flush(log);
+(b) Can the DBMS recover from a system crash using Redo-only Recovery? If not, rearrange the operations (Flush(log) operations can be added or removed if necessary) so it can be recovered using Redo-only Recovery.
+
+4. (20pt) 
+
+(a) Show an example of a schedule that is serializable but not serial. Explain why it is serializable but not serial.
+
+(b) Show an example of a schedule that is serializable but not 2PL. Explain why it is serializable but not 2PL.
+
+(c) Show an example of a schedule that is serializable but not recoverable. Explain why it is serializable but not recoverable.
+
+(d) Show an example of a schedule that is recoverable but not ACR. Explain why it is recoverable but not ACR.
+
+5. (10pt) According to the Multiversion Locking protocol, when a read-only transaction requests a value from a block, it can read from the version of the block that was most recently committed at the time the transaction began. Suppose we extend this to the read operations in read-write transactions. Specifically, for a read-write transaction T,
+
+If a block is updated by T, subsequent read operations in T will read from the version of the block produced by T.
+If a block is not updated by T, read operations in T will read from the version of the block that was most recently committed at the time when T began.
+Use an example to show that this "modified Multiversion Locking protocol" may produce non-serializable schedules.
