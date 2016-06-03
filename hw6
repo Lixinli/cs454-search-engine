@@ -38,16 +38,18 @@ Flush(X);
 no, becasue with redo only none of the change can flush to disk until the trnsaction is commited 
 
 Start Transaction
- <START, T>
-
+<START, T>
 Write(X, vx')
 <UPDATE, T, X, vx, vx'>
-Flush(log);
-Flush(X);
-
 Write(Y, vy’)
 <UPDATE, T, Y, vy, vy'>
+Commit;
+<COMMIT, T>
 Flush(log);
+Flush(X);
+Flush(Y)
+
+
 4. (20pt) 
 
 (a) Show an example of a schedule that is serializable but not serial. Explain why it is serializable but not serial.
