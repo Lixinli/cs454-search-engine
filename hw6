@@ -64,13 +64,15 @@ Flush(Y)
     additional locks once it releases any locks.
  
 (c) Show an example of a schedule that is serializable but not recoverable. Explain why it is serializable but not recoverable.
-    -w1(x),r2(x),w2(x),c2,a1
+    -w1(x),r2(x),w2(x),c2,c1
     - w1(x),r2(x),w2(x) is serializable since it is serial. it is not recoverable, 
-     T2 is reading from the data written by T1. and when T1 aborted, T2 also have to abort because in recoverable schedule,in order for 
-     transaction to commit, the transaction that it read from have to commit. and since T1 is aorted, T2 cannot commit.
+     T2 is reading from the data written by T1. and if T1 is aborting and T2  have already commited, the result
+        cannot be recovered(inconsistent in database).
+     - in recoverable schedule,in order for 
+     transaction to commit, the transaction that it read from have to commit. and if T1 is aorted, T2 cannot commit.
      
 (d) Show an example of a schedule that is recoverable but not ACR. Explain why it is recoverable but not ACR.
-
+    - w1(x),r2(x),w2(x),c2,c1
 5. (10pt) According to the Multiversion Locking protocol, when a read-only transaction requests a value from a block, it can read from the version of the block that was most recently committed at the time the transaction began. Suppose we extend this to the read operations in read-write transactions. Specifically, for a read-write transaction T,
 
 If a block is updated by T, subsequent read operations in T will read from the version of the block produced by T.
