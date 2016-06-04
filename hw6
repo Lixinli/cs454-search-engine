@@ -50,8 +50,9 @@ Flush(X);
 Flush(Y)
 
 
-4. (20pt) 
 
+
+4. (20pt) 
 (a) Show an example of a schedule that is serializable but not serial. Explain why it is serializable but not serial.
     r1(x),w1(x),r2(y),w1(y),r2(x),r1(y),w2(x) :  the schedule  is equivelnt to (T1) (T2) and it is Interleaved.  
     and Precedence Graph shows that it follow T1 to T2 sequence
@@ -72,7 +73,12 @@ Flush(Y)
      transaction to commit, the transaction that it read from have to commit. and if T1 is aorted, T2 cannot commit.
      
 (d) Show an example of a schedule that is recoverable but not ACR. Explain why it is recoverable but not ACR.
-    - w1(x),r2(x),w2(x),c2,c1
+    - w1(x),w1(y),r2(y),w2(x),c1,c2 
+    -this is recoverable T2 is read from T1 (y).  T2 is reading from the data written by T1. and T1 is commited before T2. 
+    it is not ACR because T2 is read data written by T1 at (r2(y)) before T1 is commited. and ACR)  only read values written by committed transactions.
+    
+    
+    
 5. (10pt) According to the Multiversion Locking protocol, when a read-only transaction requests a value from a block, it can read from the version of the block that was most recently committed at the time the transaction began. Suppose we extend this to the read operations in read-write transactions. Specifically, for a read-write transaction T,
 
 If a block is updated by T, subsequent read operations in T will read from the version of the block produced by T.
